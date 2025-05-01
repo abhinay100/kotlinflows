@@ -7,6 +7,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.fold
 import kotlinx.coroutines.flow.map
@@ -39,13 +40,36 @@ class MainViewModel : ViewModel() {
     }
 
     private fun collectFlow() {
+
+        val flow1 = flow {
+            emit(1)
+            delay(500)
+            emit(2)
+
+        }
+
+
         viewModelScope.launch {
-            val reduceResult = countDownFlow
+
+         flow1.flatMapConcat { value ->
+             flow {
+                 emit(value + 1)
+                 delay(500L)
+                 emit(value + 2)
+             }
+         }.collect { value ->
+                 println("The value is $value")
+             }
+
+
+         }
+
+        /*    val reduceResult = countDownFlow
                 .fold(100) { accumulator, value ->
                     accumulator + value
 
                 }
-            println("The count is $reduceResult")
+            println("The count is $reduceResult")*/
 
 
 /*         val count =  countDownFlow
@@ -74,4 +98,3 @@ class MainViewModel : ViewModel() {
 
     }
 
-}
