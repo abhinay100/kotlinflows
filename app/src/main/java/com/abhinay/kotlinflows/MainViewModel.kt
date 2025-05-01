@@ -69,8 +69,8 @@ class MainViewModel : ViewModel() {
                 println("Flow: $it is delivered")
             }
 
-                .conflate()
-                .collect {
+
+                .collectLatest {
                     println("Flow: Now eating $it")
                     delay(1500)
                     println("Flow: Finished eating $it")
