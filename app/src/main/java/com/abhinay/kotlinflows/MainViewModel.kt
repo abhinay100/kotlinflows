@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.fold
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.reduce
@@ -40,7 +41,7 @@ class MainViewModel : ViewModel() {
     private fun collectFlow() {
         viewModelScope.launch {
             val reduceResult = countDownFlow
-                .reduce { accumulator, value ->
+                .fold(100) { accumulator, value ->
                     accumulator + value
 
                 }
