@@ -68,6 +68,7 @@ class MainViewModel : ViewModel() {
                 println("Flow: $it is delivered")
             }
 
+                .buffer()
                 .collect {
                     println("Flow: Now eating $it")
                     delay(1500)
