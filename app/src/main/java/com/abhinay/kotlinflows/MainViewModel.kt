@@ -7,6 +7,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapConcat
@@ -68,7 +69,7 @@ class MainViewModel : ViewModel() {
                 println("Flow: $it is delivered")
             }
 
-                .buffer()
+                .conflate()
                 .collect {
                     println("Flow: Now eating $it")
                     delay(1500)
