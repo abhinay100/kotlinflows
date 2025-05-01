@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.reduce
 import kotlinx.coroutines.launch
 
 
@@ -21,7 +22,7 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
 
     val countDownFlow = flow<Int> {
-        val startingValue = 10
+        val startingValue = 5
         var currentValue = startingValue
         emit(startingValue)
         while (currentValue > 0) {
@@ -38,7 +39,15 @@ class MainViewModel : ViewModel() {
 
     private fun collectFlow() {
         viewModelScope.launch {
-         val count =  countDownFlow
+            val reduceResult = countDownFlow
+                .reduce { accumulator, value ->
+                    accumulator + value
+
+                }
+            println("The count is $reduceResult")
+
+
+/*         val count =  countDownFlow
                 .filter { time ->
                     time % 2 == 0
                 }
@@ -51,7 +60,7 @@ class MainViewModel : ViewModel() {
                 .count {
                     it % 2 == 0
                 }
-            println("The Count is $count")
+            println("The Count is $count")*/
 
 
 
