@@ -4,8 +4,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collectLatest
@@ -43,8 +45,32 @@ class MainViewModel : ViewModel() {
     private val _stateFlow = MutableStateFlow(0)
     val stateFlow = _stateFlow.asStateFlow()
 
+    private val _sharedFlow = MutableSharedFlow<Int>()
+    val sharedFlow = _sharedFlow.asSharedFlow()
+
     init {
-        collectFlow()
+       // collectFlow()
+
+        viewModelScope.launch {
+            sharedFlow.collect { number ->
+                delay(2000L)
+                println("FIRST FLOW: The received number is $number")
+            }
+        }
+        viewModelScope.launch {
+            sharedFlow.collect { number ->
+                delay(3000L)
+                println("SECOND FLOW: The received number is $number")
+            }
+        }
+        squareNumber(3)
+    }
+
+    fun squareNumber(number: Int) {
+        viewModelScope.launch {
+            _sharedFlow.emit(number * number)
+        }
+
     }
 
     fun incrementCounter() {
